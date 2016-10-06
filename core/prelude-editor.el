@@ -354,7 +354,7 @@ indent yanked text (with prefix arg don't indent)."
 (setq eshell-directory-name (expand-file-name "eshell" prelude-savefile-dir))
 
 (setq semanticdb-default-save-directory
-      (expand-file-name "semanticdb" prelude-savefile-dir))
+       (expand-file-name "semanticdb" prelude-savefile-dir))
 
 ;; Compilation from Emacs
 (defun prelude-colorize-compilation-buffer ()

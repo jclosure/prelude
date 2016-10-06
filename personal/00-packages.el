@@ -12,8 +12,8 @@
                                  tabbar-ruler
                                  neotree
                                  color-theme-sanityinc-tomorrow
-                                 drupal-mode
-                                 nginx-mode
+                                 ;;drupal-mode
+                                 ;;nginx-mode
                                  ) prelude-packages))
 
 ;; Install my packages

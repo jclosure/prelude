@@ -27,7 +27,17 @@
 ;; scroll one line at a time (less "jumpy" than defaults)
 (setq scroll-step 1) ;; keyboard scroll one line at a time
 
-;; neotree setup
+;; C-IDE SETUP
+(defun cide()
+  (add-to-list 'load-path
+               (expand-file-name "~/.emacs.d/personal/emacs-c-ide-demo"))
+  (load-file "~/.emacs.d/personal/emacs-c-ide-demo/init.el")
+  ;; remove prelude's reopen as root fn prelude-core:324
+  (remove-hook 'find-file-hook 'prelude-reopen-as-root)
+  )
+(cide)
+
+;; NEOTREE SETUP
 (add-to-list 'load-path "~/projects/")
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
@@ -53,14 +63,13 @@
 
 ;;;;;;;;;; FLX-IDO (MORE POWERFUL)
 
-(require 'flx-ido)
-(ido-mode 1)
-(ido-everywhere 1)
-(flx-ido-mode 1)
-
-;; disable ido faces to see flx highlights.
-(setq ido-enable-flex-matching t)
-(setq ido-use-faces nil)
+;; (require 'flx-ido)
+;; (ido-mode 1)
+;; (ido-everywhere 1)
+;; (flx-ido-mode 1)
+;; ;; disable ido faces to see flx highlights.
+;; (setq ido-enable-flex-matching t)
+;; (setq ido-use-faces nil)
 
 ;; If don't want to use the flx's highlights you can turn them off like this:
 ;;(setq flx-ido-use-faces nil)
@@ -68,11 +77,11 @@
 
 ;;; C++ SETUP
 ;; c++11
-;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
-;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++11")))
+(add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
+(add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++11")))
 ;; c++14
-(add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++14")))
-(add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++14")))
+;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++14")))
+;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++14")))
 
 
 
