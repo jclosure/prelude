@@ -11,8 +11,9 @@
 (setq prelude-auto-save nil)
 ;; which-key
 (setq which-key-idle-delay 10.0)
+
 ;; turn on semantic mode
-(semantic-mode 1)
+;;(semantic-mode 1)
 
 ;;; THEME
 ;; sanityinc package's theme
@@ -63,6 +64,16 @@
 
 ;; If don't want to use the flx's highlights you can turn them off like this:
 ;;(setq flx-ido-use-faces nil)
+
+
+;;; C++ SETUP
+;; c++11
+;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
+;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++11")))
+;; c++14
+(add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++14")))
+(add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++14")))
+
 
 
 
