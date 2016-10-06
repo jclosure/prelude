@@ -7,6 +7,14 @@ sudo apt install checkinstall -y
 sudo apt-get install aptitude -y
 sudo aptitude install ccache -y
 sudo apt-get install unrar -y
+sudo apt-get install cmake -y
+
+sudo apt-get install exuberant-ctags -y
+sudo hash -d ctags -y
+# install gnu global
+sudo apt-get install global -y
+
+sudo apt-get install midori -y
 
 # emacs 2.5 - x11deps
 # http://ubuntuhandbook.org/index.php/2016/09/install-gnu-emacs-25-1-in-ubuntu-16-04/
