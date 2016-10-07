@@ -11,6 +11,10 @@
 (setq prelude-auto-save nil)
 ;; which-key
 (setq which-key-idle-delay 10.0)
+;; full path in title bar
+(setq-default frame-title-format "%b (%f)")
+;; turn off highlight the current line
+(global-hl-line-mode -1)
 
 ;; turn on semantic mode
 ;;(semantic-mode 1)
@@ -19,10 +23,10 @@
 ;; sanityinc package's theme
 ;;(load-theme 'sanityinc-tomorrow-bright t)
 
-;; personal custom themes
-(add-to-list 'custom-theme-load-path personal-themes-dir)
-;; load default personal theme
-(load-theme 'tomorrow-night-bright t)
+;; ;; personal custom themes
+;; (add-to-list 'custom-theme-load-path personal-themes-dir)
+;; ;; load default personal theme
+;; (load-theme 'tomorrow-night-bright t)
 
 ;; scroll one line at a time (less "jumpy" than defaults)
 (setq scroll-step 1) ;; keyboard scroll one line at a time
@@ -85,21 +89,3 @@
 
 
 
-
-;; CUSTOMIZATIONS SET BY EMACS
-;; note: I have overridden the highlight forground to be black, making it easier to see
-;;       This should be removed if you run a different theme than mine (tomorrow-night-bright)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(coffee-tab-width 2)
- '(quote (tabbar-separator (quote (0.5))))
- '(tabbar-separator (quote (0.5))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(highlight ((t (:background "#b9ca4a" :foreground "black" :inverse-video nil)))))
