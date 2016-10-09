@@ -6,7 +6,9 @@
 (add-to-list 'load-path personal-themes-dir)
 
 ;; UNDO PRELUDE STUFF I DON'T LIKE
-(disable-theme 'zenburn)
+;; remove prelude's reopen as root fn prelude-core:324
+(remove-hook 'find-file-hook 'prelude-reopen-as-root)
+;;(disable-theme 'zenburn)
 (menu-bar-mode 1)
 (setq prelude-auto-save nil)
 ;; which-key
@@ -17,7 +19,18 @@
 (global-hl-line-mode -1)
 
 ;; turn on semantic mode
-;;(semantic-mode 1)
+(semantic-mode 1)
+
+
+;; CONFIGURE HELM
+(setq  helm-ff-file-name-history-use-recentf t
+       helm-semantic-fuzzy-match t
+       helm-imenu-fuzzy-match t)
+
+
+;; FIX INDENTING AND TABBING
+(setq tab-always-indent 'complete)
+(add-to-list 'completion-styles 'initials t)
 
 ;;; THEME
 ;; sanityinc package's theme
@@ -36,9 +49,11 @@
   (add-to-list 'load-path
                (expand-file-name "~/.emacs.d/personal/emacs-c-ide-demo"))
   (load-file "~/.emacs.d/personal/emacs-c-ide-demo/init.el")
-  ;; remove prelude's reopen as root fn prelude-core:324
-  (remove-hook 'find-file-hook 'prelude-reopen-as-root)
-  )
+  ;; PROLLY NOT NEC
+  (add-to-list 'company-c-headers-path-system "/usr/include/c++/5/")
+)
+
+;; DISABLE/ENABLE C-IDE
 (cide)
 
 ;; NEOTREE SETUP
@@ -86,6 +101,3 @@
 ;; c++14
 ;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++14")))
 ;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++14")))
-
-
-
