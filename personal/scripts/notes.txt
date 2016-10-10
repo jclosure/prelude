@@ -1,3 +1,72 @@
+* GDB Directive
+
+i bound f2 to build for cmake
+i boud f3 to next error
+
+** launching into bin dir
+ gdb -i=mi -cd ../build
+
+** directives
+
+manual: ftp://ftp.gnu.org/old-gnu/Manuals/gdb/html_node/gdb_57.html
+
+set print object on
+set print pretty on
+
+** source files directives
+info source
+show directories
+directory /path/to/source ( or ../path/to/source)
+
+** autoloading local-init
+https://sourceware.org/gdb/onlinedocs/gdb/Init-File-in-the-Current-Directory.html
+
+** working!!! - running gdb from emacs project cpp ./src dir
+ gdb -i=mi -cd ../build ../build/testStudent
+
+** working ~/.gdbinit
+#set print object on
+#set print pretty on
+set auto-load safe-path /
+set auto-load local-gdbinit on
+# add-auto-load-safe-path /home/joel/projects/cpp/exploringBB/extras/cmake/student/build/
+#set prompt \001\033[1;32m\002(gdb)\001\033[0m\002\040
+
+** working local .gdbinit
+set print object on
+set print pretty on
+directory ../src
+info source
+show directories
+show auto-load local-gdbinit
+info auto-load local-gdbinit
+
+ 
+READ THIS JOEL: http://www.dirac.org/linux/gdb/03-Initialization,_Listing,_And_Running.php
+
+* systemd
+** debugging to see what's going on
+
+ systemctl --user status rdm.socket ; // where rdm.socket is the thing
+  journalctl -xe
+
+
+* cmake 
+do a build
+mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug  .. && make
+
+* build or release
+** from cli
+If you want to build for debug (including source information, i.e. -g) when compiling, use
+
+cmake -DCMAKE_BUILD_TYPE=Debug <path>
+If you want to build a release build, you can use
+
+cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo <path>
+
+** in CMakeLists.txt
+set(CMAKE_BUILD_TYPE Debug)
+
 
 .bashrc:
 # my aliases

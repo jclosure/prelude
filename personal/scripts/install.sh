@@ -4,11 +4,13 @@ sudo apt-get update
 sudo apt-get install build-essential -y
 sudo apt-get install llvm -y
 sudo apt-get install clang -y
+
 sudo apt-get install libclang-dev -y
 sudo apt install checkinstall -y
 sudo apt-get install aptitude -y
 sudo aptitude install ccache -y
 sudo apt-get install unrar -y
+sudo apt install tree -y
 sudo apt-get install xutils-dev -y
 sudo apt-get install cmake -y
 sudo apt-get install libboost-dev -y

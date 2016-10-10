@@ -7,6 +7,12 @@
 
 ;; My packages
 (setq prelude-packages (append '(
+
+                                 ;; ide
+                                 cmake-ide
+                                 rtags
+
+                                 ;; ui
                                  flx-ido
                                  tabbar
                                  tabbar-ruler
