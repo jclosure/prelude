@@ -9,8 +9,15 @@ sudo apt install checkinstall -y
 sudo apt-get install aptitude -y
 sudo aptitude install ccache -y
 sudo apt-get install unrar -y
+sudo apt-get install xutils-dev -y
 sudo apt-get install cmake -y
 sudo apt-get install libboost-dev -y
+
+sudo apt-get install libssl-dev -y
+
+sudo apt-get install bear -y
+sudo apt-get install bash-completion -y
+sudo apt-get install pkg-config -y
 
 sudo apt-get install exuberant-ctags -y
 sudo hash -d ctags -y
