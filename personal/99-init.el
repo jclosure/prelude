@@ -5,6 +5,25 @@
 (setq personal-themes-dir "~/.emacs.d/personal/themes")
 (add-to-list 'load-path personal-themes-dir)
 
+
+;;; GENERAL TWEAKAGE
+(setq history-delete-duplicates t)
+;; Make URLs clickable
+(add-hook 'shell-mode-hook (lambda () (goto-address-mode )))
+;; Make file paths clickable
+(add-hook 'shell-mode-hook 'compilation-shell-minor-mode)
+;; You can highlight some text based on regexp (useful to see "OK" or warnings):
+(add-hook 'shell-mode-hook (lambda () (highlight-regexp "\\[OK\\]" "green")))
+
+
+;;; PRESERVE SHELL HISTORY
+(add-hook 'shell-mode-hook 'my-shell-mode-hook)
+(defun my-shell-mode-hook ()
+  (setq comint-input-ring-file-name "~/.bash_history")  ;; or .zsh_history
+  (comint-read-input-ring t))
+
+
+
 ;; UNDO PRELUDE STUFF I DON'T LIKE
 ;; remove prelude's reopen as root fn prelude-core:324
 (remove-hook 'find-file-hook 'prelude-reopen-as-root)
@@ -20,12 +39,6 @@
 
 ;; turn on semantic mode
 (semantic-mode 1)
-
-
-;; CONFIGURE HELM
-(setq  helm-ff-file-name-history-use-recentf t
-       helm-semantic-fuzzy-match t
-       helm-imenu-fuzzy-match t)
 
 
 ;; FIX INDENTING AND TABBING
@@ -55,6 +68,77 @@
 
 ;; DISABLE/ENABLE C-IDE
 (cide)
+
+
+
+;; CONFIGURE HELM
+(setq  helm-ff-file-name-history-use-recentf t
+       helm-semantic-fuzzy-match t
+       helm-imenu-fuzzy-match t
+       )
+
+;;; helm scratch space here...
+
+;; (define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
+;; (define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
+
+;; ;; Disable helm in some functions
+;; (add-to-list 'helm-completing-read-handlers-alist '(find-file . nil))
+;; (add-to-list ' helm-completing-read-handlers-alist' (find-file . ido))
+;; (add-to-list ' helm-completing-read-handlers-alist' (write-file . nil))
+;; (add-to-list 'helm-completing-read-handlers-alist' (find-alternate-file . nil))
+;; (add-to-list 'helm-completing-read-handlers-alist' (find-tag . nil))
+
+;; disable file find - doesn t work
+;; (add-to-list 'helm-completing-read-handlers-alist '(find-file-read-only . ido))
+;; (add-to-list 'helm-completing-read-handlers-alist '(find-file . ido))
+
+
+
+
+
+;; CONFIGURE COMPANY
+
+;; (setq company-minimum-prefix-length 2)
+
+(with-eval-after-load 'company
+  (define-key company-active-map (kbd "C-n") #'company-select-next)
+  (define-key company-active-map (kbd "C-p") #'company-select-previous))
+
+;; disable what is
+;; (if (display-graphic-p)
+;;     (with-eval-after-load 'company
+;;       (define-key company-active-map (kbd "ESC") 'company-abort)))
+
+;; prefer company-mode for completing in shell-mode instead of helm
+;; (add-hook 'shell-mode-hook #'company-mode)
+;; (define-key shell-mode-map (kbd "TAB") #'company-manual-begin)
+
+;; (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+;;       helm-move-to-line-cycle-in-source     nil ; move to end or beginning of source when reaching top or bottom of source.
+;;       helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+;;      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+;;       helm-ff-file-name-history-use-recentf t
+;;       helm-echo-input-in-header-line t)
+
+
+
+;;; MODIFY HELM DEFAULT FILE NAVIGATION
+
+;; (defun fu/helm-find-files-navigate-forward (orig-fun &rest args)
+;;   (if (file-directory-p (helm-get-selection))
+;;       (apply orig-fun args)
+;;     (helm-maybe-exit-minibuffer)))
+;; (advice-add 'helm-execute-persistent-action :around #'fu/helm-find-files-navigate-forward)
+;; (define-key helm-find-files-map (kbd "<return>") 'helm-execute-persistent-action)
+
+
+(defun fu/helm-find-files-navigate-back (orig-fun &rest args)
+  (if (= (length helm-pattern) (length (helm-find-files-initial-input)))
+      (helm-find-files-up-one-level 1)
+    (apply orig-fun args)))
+(advice-add 'helm-ff-delete-char-backward :around #'fu/helm-find-files-navigate-back)
+
 
 ;; NEOTREE SETUP
 (add-to-list 'load-path "~/projects/")
@@ -94,6 +178,7 @@
 ;;(setq flx-ido-use-faces nil)
 
 
+
 ;;; C++ SETUP
 ;; c++11
 (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
@@ -101,3 +186,12 @@
 ;; c++14
 ;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++14")))
 ;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++14")))
+
+;; setup GDB
+(setq
+ ;; use gdb-many-windows by default
+ gdb-many-windows t
+
+ ;; Non-nil means display source file containing the main routine at startup
+ gdb-show-main t
+ )
