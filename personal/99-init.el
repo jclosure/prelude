@@ -7,7 +7,7 @@
 
 
 ;;; GENERAL TWEAKAGE
-(setq history-delete-duplicates t)
+;; (setq history-delete-duplicates t)
 ;; Make URLs clickable
 (add-hook 'shell-mode-hook (lambda () (goto-address-mode )))
 ;; Make file paths clickable
@@ -38,7 +38,7 @@
 (global-hl-line-mode -1)
 
 ;; turn on semantic mode
-(semantic-mode 1)
+;; (semantic-mode 1)
 
 
 ;; FIX INDENTING AND TABBING
@@ -57,19 +57,70 @@
 ;; scroll one line at a time (less "jumpy" than defaults)
 (setq scroll-step 1) ;; keyboard scroll one line at a time
 
-;; C-IDE SETUP
-(defun cide()
-  (add-to-list 'load-path
-               (expand-file-name "~/.emacs.d/personal/emacs-c-ide-demo"))
-  (load-file "~/.emacs.d/personal/emacs-c-ide-demo/init.el")
-  ;; PROLLY NOT NEC
-  (add-to-list 'company-c-headers-path-system "/usr/include/c++/5/")
+
+;; ------------------------------------------------------------
+
+
+;; ;; C-IDE SETUP
+;; (defun cide()
+;;   (add-to-list 'load-path
+;;                (expand-file-name "~/.emacs.d/personal/emacs-c-ide-demo"))
+;;   (load-file "~/.emacs.d/personal/emacs-c-ide-demo/init.el")
+;;   ;; PROLLY NOT NEC
+;;   (add-to-list 'company-c-headers-path-system "/usr/include/c++/5/")
+;; )
+
+;; ;; DISABLE/ENABLE C-IDE
+;; (cide)
+
+
+
+(defun my-c-mode-config ()
+
+  ;; CMAKE IDE
+  (require 'rtags) ;; optional, must have rtags installed
+  (cmake-ide-setup)
+ ;; (global-set-key [f2]   'compile)
+
+  (local-set-key [f2] 'cmake-ide-compile)
+  (local-set-key [f3] 'next-error)
+
+  ;; MY C STUFF
+
+  ;; ;; To specify what M-x make uses for compilation, you specify the compile-command variable.
+  ;; ;;(setq compile-command "make -C ../build")
+  ;; (setq compile-command "PREV=$(pwd) && mkdir -p ../build && cd ../build && cmake -DCMAKE_BUILD_TYPE=Debug  .. && make && cd $PREV")
+
+  ;; ;; For your GDB stuff, the variable is gud-gdb-command-name, so
+  ;; (setq gud-gdb-command-name "gdb --anotate=3 -i=mi -cd ../build")
+
+  ;; (global-set-key [f2]   'compile)
+  ;; (global-set-key [f3]   'next-error)
+
+
+  ;; tricked
+  (require 'company-rtags)
+
+  (setq rtags-completions-enabled t)
+  (eval-after-load 'company
+    '(add-to-list
+      'company-backends 'company-rtags))
+  (setq rtags-autostart-diagnostics t)
+  (rtags-enable-standard-keybindings)
+
+
 )
 
-;; DISABLE/ENABLE C-IDE
-(cide)
+;; add to hook
+(add-hook 'c++-mode-hook 'my-c-mode-config)
 
 
+
+
+
+
+
+;; -----------------------------------------------------------
 
 ;; CONFIGURE HELM
 (setq  helm-ff-file-name-history-use-recentf t
