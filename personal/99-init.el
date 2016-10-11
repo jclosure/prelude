@@ -258,13 +258,14 @@
 
 (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
 (setq company-backends (delete 'company-semantic company-backends))
+(require 'company-irony-c-headers)
 (eval-after-load 'company
   '(add-to-list
-    'company-backends 'company-irony))
+    'company-backends '(company-irony-c-headers company-irony)))
 
 (setq company-idle-delay 0)
-(define-key c-mode-map [(tab)] 'company-complete)
-(define-key c++-mode-map [(tab)] 'company-complete)
+;; (define-key c-mode-map [(tab)] 'company-complete)
+;; (define-key c++-mode-map [(tab)] 'company-complete)
 
 ;; -----------------------------------------------------------
 
