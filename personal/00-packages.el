@@ -13,6 +13,7 @@
                                  rtags
                                  irony
                                  company-irony
+                                 company-irony-c-headers
 
                                  ;; ui
                                  flx-ido
