@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.8.9)
 project(directory_test)
 
+set (CMAKE_CXX_STANDARD 11)
+
+
 set(CMAKE_BUILD_TYPE Debug)
 
 # Add -O0 to remove optimizations when using gcc

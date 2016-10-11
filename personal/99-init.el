@@ -27,7 +27,7 @@
 ;; UNDO PRELUDE STUFF I DON'T LIKE
 ;; remove prelude's reopen as root fn prelude-core:324
 (remove-hook 'find-file-hook 'prelude-reopen-as-root)
-;;(disable-theme 'zenburn)
+;; (disable-theme 'zenburn)
 (menu-bar-mode 1)
 (setq prelude-auto-save nil)
 ;; which-key
@@ -61,6 +61,34 @@
 ;; ------------------------------------------------------------
 
 
+
+;;; C++ SETUP
+;; c++11
+(add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
+(add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++11")))
+;; c++14
+;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++14")))
+;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++14")))
+
+;; (add-hook 'c++-mode-hook
+;;           (lambda () (setq flycheck-clang-standard-library "libc++")))
+;; (add-hook 'c++-mode-hook
+;;           (lambda () (setq flycheck-clang-language-standard "c++1y")))
+
+;; setup GDB
+(setq
+ ;; use gdb-many-windows by default
+ gdb-many-windows t
+
+ ;; Non-nil means display source file containing the main routine at startup
+ gdb-show-main t
+ )
+
+;; treat .h files as c++ files
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
+
+
 ;; ;; C-IDE SETUP
 ;; (defun cide()
 ;;   (add-to-list 'load-path
@@ -74,13 +102,14 @@
 ;; (cide)
 
 
+;; CMAKE IDE
+(require 'rtags) ;; optional, must have rtags installed
+(cmake-ide-setup)
+;; (global-set-key [f2]   'compile)
+
 
 (defun my-c-mode-config ()
 
-  ;; CMAKE IDE
-  (require 'rtags) ;; optional, must have rtags installed
-  (cmake-ide-setup)
- ;; (global-set-key [f2]   'compile)
 
   (local-set-key [f2] 'cmake-ide-compile)
   (local-set-key [f3] 'next-error)
@@ -97,28 +126,145 @@
   ;; (global-set-key [f2]   'compile)
   ;; (global-set-key [f3]   'next-error)
 
-
-  ;; tricked
-  (require 'company-rtags)
-
-  (setq rtags-completions-enabled t)
-  (eval-after-load 'company
-    '(add-to-list
-      'company-backends 'company-rtags))
-  (setq rtags-autostart-diagnostics t)
-  (rtags-enable-standard-keybindings)
-
-
 )
 
 ;; add to hook
 (add-hook 'c++-mode-hook 'my-c-mode-config)
+;; (add-hook 'c-mode-common-hook 'rtags-start-process-unless-running)
+(add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
+
+
+;; gtags
+
+(defun gtags-root-dir ()
+  "Returns GTAGS root directory or nil if doesn't exist."
+  (with-temp-buffer
+    (if (zerop (call-process "global" nil t nil "-pr"))
+        (buffer-substring (point-min) (1- (point-max)))
+      nil)))
+;; (defun gtags-update ()
+;;   "Make GTAGS incremental update"
+;;   (call-process "global" nil nil nil "-u"))
+;; (defun gtags-update-hook ()
+;;   (when (gtags-root-dir)
+;;     (gtags-update)))
+;; (add-hook 'after-save-hook #'gtags-update-hook)
+
+
+;; (add-hook 'c-mode-common-hook
+;;           (lambda ()
+;;             (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+;;               (ggtags-mode 1))))
+
+;; (dolist (map (list ggtags-mode-map dired-mode-map))
+;;   (define-key map (kbd "C-c g s") 'ggtags-find-other-symbol)
+;;   (define-key map (kbd "C-c g h") 'ggtags-view-tag-history)
+;;   (define-key map (kbd "C-c g r") 'ggtags-find-reference)
+;;   (define-key map (kbd "C-c g f") 'ggtags-find-file)
+;;   (define-key map (kbd "C-c g c") 'ggtags-create-tags)
+;;   (define-key map (kbd "C-c g u") 'ggtags-update-tags)
+;;   (define-key map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+;;   (define-key map (kbd "M-.") 'ggtags-find-tag-dwim)
+;;   (define-key map (kbd "M-,") 'pop-tag-mark)
+;;   (define-key map (kbd "C-c <") 'ggtags-prev-mark)
+;;   (define-key map (kbd "C-c >") 'ggtags-next-mark))
 
 
 
 
+;; FROM SCRATCH
 
 
+;;  (require 'company-rtags)
+
+(setq rtags-autostart-diagnostics t)
+(rtags-diagnostics)
+(setq rtags-completions-enabled t)
+;;  (push 'company-rtags company-backends)
+
+
+
+(progn
+
+  (defun use-rtags (&optional useFileManager)
+    (and (rtags-executable-find "rc")
+         (cond ((not (gtags-root-dir)) t)
+               ((and (not (eq major-mode 'c++-mode))
+                     (not (eq major-mode 'c-mode))) (rtags-has-filemanager))
+               (useFileManager (rtags-has-filemanager))
+               (t (rtags-is-indexed)))))
+
+  (defun tags-find-symbol-at-point (&optional prefix)
+    (interactive "P")
+    (if (and (not (rtags-find-symbol-at-point prefix)) rtags-last-request-not-indexed)
+        (gtags-find-tag)))
+  (defun tags-find-references-at-point (&optional prefix)
+    (interactive "P")
+    (if (and (not (rtags-find-references-at-point prefix)) rtags-last-request-not-indexed)
+        (gtags-find-rtag)))
+  (defun tags-find-symbol ()
+    (interactive)
+    (call-interactively (if (use-rtags) 'rtags-find-symbol 'gtags-find-symbol)))
+  (defun tags-find-references ()
+    (interactive)
+    (call-interactively (if (use-rtags) 'rtags-find-references 'gtags-find-rtag)))
+  (defun tags-find-file ()
+    (interactive)
+    (call-interactively (if (use-rtags t) 'rtags-find-file 'gtags-find-file)))
+  (defun tags-imenu ()
+    (interactive)
+    (call-interactively (if (use-rtags t) 'rtags-imenu 'idomenu)))
+
+  ;; NAV REF http://syamajala.github.io/c-ide.html
+
+  (define-key c-mode-base-map (kbd "M-.") (function tags-find-symbol-at-point))
+  (define-key c-mode-base-map (kbd "M-,") (function rtags-location-stack-back))
+  ;; (define-key c-mode-base-map (kbd "M-,") (function tags-find-references-at-point))
+
+  ;; (define-key c-mode-base-map (kbd "M-;") (function tags-find-file))
+  ;; (define-key c-mode-base-map (kbd "C-.") (function tags-find-symbol))
+  ;; (define-key c-mode-base-map (kbd "C-,") (function tags-find-references))
+  ;; (define-key c-mode-base-map (kbd "C-<") (function rtags-find-virtuals-at-point))
+  ;; (define-key c-mode-base-map (kbd "M-i") (function tags-imenu))
+
+  ;; (define-key global-map (kbd "M-.") (function tags-find-symbol-at-point))
+  ;; (define-key global-map (kbd "M-,") (function tags-find-references-at-point))
+  ;; (define-key global-map (kbd "M-;") (function tags-find-file))
+  ;; (define-key global-map (kbd "C-.") (function tags-find-symbol))
+  ;; (define-key global-map (kbd "C-,") (function tags-find-references))
+  ;; (define-key global-map (kbd "C-<") (function rtags-find-virtuals-at-point))
+  ;; (define-key global-map (kbd "M-i") (function tags-imenu))
+
+  (use-rtags))
+
+;;; IRONY
+
+;; needs M-x: irony-install-server
+
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'objc-mode-hook 'irony-mode)
+
+(defun my-irony-mode-hook ()
+  (define-key irony-mode-map [remap completion-at-point]
+    'irony-completion-at-point-async)
+  (define-key irony-mode-map [remap complete-symbol]
+    'irony-completion-at-point-async))
+
+(add-hook 'irony-mode-hook 'my-irony-mode-hook)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+;;(global-company-mode)
+
+(add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
+(setq company-backends (delete 'company-semantic company-backends))
+(eval-after-load 'company
+  '(add-to-list
+    'company-backends 'company-irony))
+
+(setq company-idle-delay 0)
+(define-key c-mode-map [(tab)] 'company-complete)
+(define-key c++-mode-map [(tab)] 'company-complete)
 
 ;; -----------------------------------------------------------
 
@@ -227,22 +373,3 @@
 
 ;; If don't want to use the flx's highlights you can turn them off like this:
 ;;(setq flx-ido-use-faces nil)
-
-
-
-;;; C++ SETUP
-;; c++11
-(add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
-(add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++11")))
-;; c++14
-;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++14")))
-;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++14")))
-
-;; setup GDB
-(setq
- ;; use gdb-many-windows by default
- gdb-many-windows t
-
- ;; Non-nil means display source file containing the main routine at startup
- gdb-show-main t
- )

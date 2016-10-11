@@ -6,19 +6,55 @@
 
 #IncludeRegexTransform: 
 
-../include/Student.h
+../include/Person.h
 string
 -
 
-/home/joel/projects/cpp/exploringBB/extras/cmake/student/src/Student.cpp
+../include/Student.h
+string
+-
+Person.h
+../include/Person.h
+
+../include/Teacher.h
+string
+-
+Person.h
+../include/Person.h
+
+/home/joel/.emacs.d/personal/extras/cmake/student/src/Person.cpp
+iostream
+-
+string
+-
+Person.h
+/home/joel/.emacs.d/personal/extras/cmake/student/src/Person.h
+
+/home/joel/.emacs.d/personal/extras/cmake/student/src/Student.cpp
 iostream
 -
 string
 -
 Student.h
-/home/joel/projects/cpp/exploringBB/extras/cmake/student/src/Student.h
+/home/joel/.emacs.d/personal/extras/cmake/student/src/Student.h
+Person.h
+/home/joel/.emacs.d/personal/extras/cmake/student/src/Person.h
 
-/home/joel/projects/cpp/exploringBB/extras/cmake/student/src/mainapp.cpp
+/home/joel/.emacs.d/personal/extras/cmake/student/src/Teacher.cpp
+iostream
+-
+string
+-
+Teacher.h
+/home/joel/.emacs.d/personal/extras/cmake/student/src/Teacher.h
+Person.h
+/home/joel/.emacs.d/personal/extras/cmake/student/src/Person.h
+
+/home/joel/.emacs.d/personal/extras/cmake/student/src/mainapp.cpp
+iostream
+-
 Student.h
-/home/joel/projects/cpp/exploringBB/extras/cmake/student/src/Student.h
+/home/joel/.emacs.d/personal/extras/cmake/student/src/Student.h
+Teacher.h
+/home/joel/.emacs.d/personal/extras/cmake/student/src/Teacher.h
 

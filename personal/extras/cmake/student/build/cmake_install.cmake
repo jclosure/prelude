@@ -1,4 +1,4 @@
-# Install script for directory: /home/joel/projects/cpp/exploringBB/extras/cmake/student
+# Install script for directory: /home/joel/.emacs.d/personal/extras/cmake/student
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/joel/projects/cpp/exploringBB/extras/cmake/student/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/joel/.emacs.d/personal/extras/cmake/student/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
