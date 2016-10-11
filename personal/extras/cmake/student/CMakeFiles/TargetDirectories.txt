@@ -1,3 +1,0 @@
-/home/joel/projects/cpp/exploringBB/extras/cmake/student/CMakeFiles/rebuild_cache.dir
-/home/joel/projects/cpp/exploringBB/extras/cmake/student/CMakeFiles/edit_cache.dir
-/home/joel/projects/cpp/exploringBB/extras/cmake/student/CMakeFiles/testStudent.dir

@@ -1,9 +1,10 @@
 #include<string>
+#include "Person.h"
 
-class Student{
+class Student : public Person{
 private:
-	std::string name;
+
 public:
-	Student(std::string);
-	virtual void display();
+        Student(std::string);
+        virtual std::string takeTest(string test);
 };

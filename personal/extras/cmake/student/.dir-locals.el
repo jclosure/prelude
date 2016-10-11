@@ -1,1 +1,1 @@
-((nil . ((cmake-ide-build-dir . "/home/joel/projects/cpp/exploringBB/extras/cmake/student/build"))))
+((nil . ((cmake-ide-build-dir . "/home/joel/.emacs.d/personal/extras/cmake/student/build"))))

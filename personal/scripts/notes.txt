@@ -1,3 +1,19 @@
+* SUDO
+sudo -s
+visudo
+** add to the very end of the file
+joel     ALL=(ALL) NOPASSWD:ALL
+
+
+* RTAGS
+
+** see the compilation command rtags will use for a file
+rc --sources ./personal/extras/cmake/student/src/mainapp.cpp 
+
+** see versions of c++ installed in the system
+update-alternatives --query c++
+
+
 * GDB Directive
 
 i bound f2 to build for cmake
@@ -41,6 +57,9 @@ show directories
 show auto-load local-gdbinit
 info auto-load local-gdbinit
 
+# get syntax coloring in gdb
+https://github.com/nojhan/colout
+https://github.com/nojhan/colout/blob/master/colout/example.gdbinit
  
 READ THIS JOEL: http://www.dirac.org/linux/gdb/03-Initialization,_Listing,_And_Running.php
 

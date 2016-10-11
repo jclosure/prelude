@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/joel/projects/cpp/exploringBB/extras/cmake/student
+CMAKE_SOURCE_DIR = /home/joel/.emacs.d/personal/extras/cmake/student
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/joel/projects/cpp/exploringBB/extras/cmake/student/build
+CMAKE_BINARY_DIR = /home/joel/.emacs.d/personal/extras/cmake/student/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joel/projects/cpp/exploringBB/extras/cmake/student/build/CMakeFiles /home/joel/projects/cpp/exploringBB/extras/cmake/student/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/joel/.emacs.d/personal/extras/cmake/student/build/CMakeFiles /home/joel/.emacs.d/personal/extras/cmake/student/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joel/projects/cpp/exploringBB/extras/cmake/student/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/joel/.emacs.d/personal/extras/cmake/student/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -123,6 +123,33 @@ testStudent/fast:
 	$(MAKE) -f CMakeFiles/testStudent.dir/build.make CMakeFiles/testStudent.dir/build
 .PHONY : testStudent/fast
 
+src/Person.o: src/Person.cpp.o
+
+.PHONY : src/Person.o
+
+# target to build an object file
+src/Person.cpp.o:
+	$(MAKE) -f CMakeFiles/testStudent.dir/build.make CMakeFiles/testStudent.dir/src/Person.cpp.o
+.PHONY : src/Person.cpp.o
+
+src/Person.i: src/Person.cpp.i
+
+.PHONY : src/Person.i
+
+# target to preprocess a source file
+src/Person.cpp.i:
+	$(MAKE) -f CMakeFiles/testStudent.dir/build.make CMakeFiles/testStudent.dir/src/Person.cpp.i
+.PHONY : src/Person.cpp.i
+
+src/Person.s: src/Person.cpp.s
+
+.PHONY : src/Person.s
+
+# target to generate assembly for a file
+src/Person.cpp.s:
+	$(MAKE) -f CMakeFiles/testStudent.dir/build.make CMakeFiles/testStudent.dir/src/Person.cpp.s
+.PHONY : src/Person.cpp.s
+
 src/Student.o: src/Student.cpp.o
 
 .PHONY : src/Student.o
@@ -149,6 +176,33 @@ src/Student.s: src/Student.cpp.s
 src/Student.cpp.s:
 	$(MAKE) -f CMakeFiles/testStudent.dir/build.make CMakeFiles/testStudent.dir/src/Student.cpp.s
 .PHONY : src/Student.cpp.s
+
+src/Teacher.o: src/Teacher.cpp.o
+
+.PHONY : src/Teacher.o
+
+# target to build an object file
+src/Teacher.cpp.o:
+	$(MAKE) -f CMakeFiles/testStudent.dir/build.make CMakeFiles/testStudent.dir/src/Teacher.cpp.o
+.PHONY : src/Teacher.cpp.o
+
+src/Teacher.i: src/Teacher.cpp.i
+
+.PHONY : src/Teacher.i
+
+# target to preprocess a source file
+src/Teacher.cpp.i:
+	$(MAKE) -f CMakeFiles/testStudent.dir/build.make CMakeFiles/testStudent.dir/src/Teacher.cpp.i
+.PHONY : src/Teacher.cpp.i
+
+src/Teacher.s: src/Teacher.cpp.s
+
+.PHONY : src/Teacher.s
+
+# target to generate assembly for a file
+src/Teacher.cpp.s:
+	$(MAKE) -f CMakeFiles/testStudent.dir/build.make CMakeFiles/testStudent.dir/src/Teacher.cpp.s
+.PHONY : src/Teacher.cpp.s
 
 src/mainapp.o: src/mainapp.cpp.o
 
@@ -186,9 +240,15 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... testStudent"
+	@echo "... src/Person.o"
+	@echo "... src/Person.i"
+	@echo "... src/Person.s"
 	@echo "... src/Student.o"
 	@echo "... src/Student.i"
 	@echo "... src/Student.s"
+	@echo "... src/Teacher.o"
+	@echo "... src/Teacher.i"
+	@echo "... src/Teacher.s"
 	@echo "... src/mainapp.o"
 	@echo "... src/mainapp.i"
 	@echo "... src/mainapp.s"

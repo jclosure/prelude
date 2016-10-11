@@ -1,12 +1,22 @@
 [
 {
-  "directory": "/home/joel/projects/cpp/exploringBB/extras/cmake/student/build",
-  "command": "/usr/bin/c++    -I/home/joel/projects/cpp/exploringBB/extras/cmake/student/include  -g   -o CMakeFiles/testStudent.dir/src/Student.cpp.o -c /home/joel/projects/cpp/exploringBB/extras/cmake/student/src/Student.cpp",
-  "file": "/home/joel/projects/cpp/exploringBB/extras/cmake/student/src/Student.cpp"
+  "directory": "/home/joel/.emacs.d/personal/extras/cmake/student/build",
+  "command": "/usr/bin/c++    -I/home/joel/.emacs.d/personal/extras/cmake/student/include  -g   -std=gnu++11 -o CMakeFiles/testStudent.dir/src/Person.cpp.o -c /home/joel/.emacs.d/personal/extras/cmake/student/src/Person.cpp",
+  "file": "/home/joel/.emacs.d/personal/extras/cmake/student/src/Person.cpp"
 },
 {
-  "directory": "/home/joel/projects/cpp/exploringBB/extras/cmake/student/build",
-  "command": "/usr/bin/c++    -I/home/joel/projects/cpp/exploringBB/extras/cmake/student/include  -g   -o CMakeFiles/testStudent.dir/src/mainapp.cpp.o -c /home/joel/projects/cpp/exploringBB/extras/cmake/student/src/mainapp.cpp",
-  "file": "/home/joel/projects/cpp/exploringBB/extras/cmake/student/src/mainapp.cpp"
+  "directory": "/home/joel/.emacs.d/personal/extras/cmake/student/build",
+  "command": "/usr/bin/c++    -I/home/joel/.emacs.d/personal/extras/cmake/student/include  -g   -std=gnu++11 -o CMakeFiles/testStudent.dir/src/Student.cpp.o -c /home/joel/.emacs.d/personal/extras/cmake/student/src/Student.cpp",
+  "file": "/home/joel/.emacs.d/personal/extras/cmake/student/src/Student.cpp"
+},
+{
+  "directory": "/home/joel/.emacs.d/personal/extras/cmake/student/build",
+  "command": "/usr/bin/c++    -I/home/joel/.emacs.d/personal/extras/cmake/student/include  -g   -std=gnu++11 -o CMakeFiles/testStudent.dir/src/Teacher.cpp.o -c /home/joel/.emacs.d/personal/extras/cmake/student/src/Teacher.cpp",
+  "file": "/home/joel/.emacs.d/personal/extras/cmake/student/src/Teacher.cpp"
+},
+{
+  "directory": "/home/joel/.emacs.d/personal/extras/cmake/student/build",
+  "command": "/usr/bin/c++    -I/home/joel/.emacs.d/personal/extras/cmake/student/include  -g   -std=gnu++11 -o CMakeFiles/testStudent.dir/src/mainapp.cpp.o -c /home/joel/.emacs.d/personal/extras/cmake/student/src/mainapp.cpp",
+  "file": "/home/joel/.emacs.d/personal/extras/cmake/student/src/mainapp.cpp"
 }
 ]

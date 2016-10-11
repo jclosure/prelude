@@ -11,6 +11,8 @@
                                  ;; ide
                                  cmake-ide
                                  rtags
+                                 irony
+                                 company-irony
 
                                  ;; ui
                                  flx-ido

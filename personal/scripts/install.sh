@@ -2,9 +2,13 @@
 
 sudo apt-get update
 sudo apt-get install build-essential -y
+sudo apt-get install curl -y
+sudo apt-get install wget -y
+sudo apt-get install ncurses-dev -y
 sudo apt-get install llvm -y
 sudo apt-get install clang -y
-
+	
+sudo apt-get install cgdb -y
 sudo apt-get install libclang-dev -y
 sudo apt install checkinstall -y
 sudo apt-get install aptitude -y
@@ -23,8 +27,22 @@ sudo apt-get install pkg-config -y
 
 sudo apt-get install exuberant-ctags -y
 sudo hash -d ctags -y
+
 # install gnu global
-sudo apt-get install global -y
+# built in pkg is too old (v5.7) - sudo apt-get install global -y
+# instead do this to get 6.4
+echo "install GNU global..."
+mkdir -p ~/projects/scratch
+cd ~/projects/scratch
+wget http://tamacom.com/global/global-6.4.tar.gz
+tar zxvf global-6.4.tar.gz
+cd global-6.4
+./configure
+make
+sudo make install
+
+#note: uninstall this with: sudo make uninstall
+
 sudo apt-get install python-pyflakes -y
 
 sudo apt-get install midori -y
@@ -47,6 +65,10 @@ cd
 git clone https://github.com/jclosure/prelude.git .emacs.d
 cd .emacs.d/personal
 git clone git@github.com:jclosure/emacs-c-ide-demo.git
+
+# install pip
+sudo apt-get install python-pip -y
+pip install colout
 
 # meld graphical diffs
 sudo apt-get install meld -y
