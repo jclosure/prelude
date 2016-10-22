@@ -5,6 +5,11 @@
 (setq personal-themes-dir "~/.emacs.d/personal/themes")
 (add-to-list 'load-path personal-themes-dir)
 
+;; THEME
+(disable-theme 'zenburn)
+;;(load-theme 'sanityinc-tomorrow-night-theme)
+(require 'color-theme-sanityinc-tomorrow)
+(color-theme-sanityinc-tomorrow--define-theme night)
 
 ;;; GENERAL TWEAKAGE
 ;; (setq history-delete-duplicates t)
@@ -27,7 +32,7 @@
 ;; UNDO PRELUDE STUFF I DON'T LIKE
 ;; remove prelude's reopen as root fn prelude-core:324
 (remove-hook 'find-file-hook 'prelude-reopen-as-root)
-;; (disable-theme 'zenburn)
+
 (menu-bar-mode 1)
 (setq prelude-auto-save nil)
 ;; which-key
@@ -45,17 +50,43 @@
 (setq tab-always-indent 'complete)
 (add-to-list 'completion-styles 'initials t)
 
-;;; THEME
-;; sanityinc package's theme
-;;(load-theme 'sanityinc-tomorrow-bright t)
 
-;; ;; personal custom themes
-;; (add-to-list 'custom-theme-load-path personal-themes-dir)
-;; ;; load default personal theme
-;; (load-theme 'tomorrow-night-bright t)
+;; SCROLLING
+
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 2) ((control) . nil)))
+(setq mouse-wheel-progressive-speed nil)
 
 ;; scroll one line at a time (less "jumpy" than defaults)
-(setq scroll-step 1) ;; keyboard scroll one line at a time
+(setq scroll-step 1)
+
+;; globally disable audible bell
+;;(setq ring-bell-function (lambda () ()))
+
+;;keep cursor at same position when scrolling
+(setq scroll-preserve-screen-position 1)
+;;scroll window up/down by one line
+(global-set-key (kbd "M-n") (kbd "C-u 1 C-v"))
+(global-set-key (kbd "M-p") (kbd "C-u 1 M-v"))
+
+
+;; OS-SPECIFIC SETUP
+(cond
+ ((string-equal system-type "windows-nt") ; Microsoft Windows
+  (progn
+    (message "You are using Microsoft Windows")
+    ;; do windows stuff
+    ))
+ ((string-equal system-type "darwin") ; Mac OS X
+  (progn
+    (message "You are using Mac OS X")
+    ;; do OSX stuff
+    ))
+ ((string-equal system-type "gnu/linux") ; linux
+  (progn
+    (message "You are using Linux")
+    ;; do Linux stuff
+    )))
+
 
 
 ;; ------------------------------------------------------------
@@ -263,7 +294,7 @@
   '(add-to-list
     'company-backends '(company-irony-c-headers company-irony)))
 
-(setq company-idle-delay 0)
+(setq company-idle-delay 1)
 ;; (define-key c-mode-map [(tab)] 'company-complete)
 ;; (define-key c++-mode-map [(tab)] 'company-complete)
 
