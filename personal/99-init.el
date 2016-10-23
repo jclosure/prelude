@@ -111,9 +111,25 @@
 (add-hook 'elixir-mode-hook 'flycheck-mode)
 
 
+
 ;; ------------------------------------------------------------
 
+;;; YASNIPPETS
+(defun dot-emacs (relative-path)
+  "Return the full path of a file in the user's emacs directory."
+  (expand-file-name (concat user-emacs-directory relative-path)))
 
+(require 'yasnippet)
+(yas/initialize)
+;;(yas/load-directory
+;; (dot-emacs "elpa/yasnippet-20161022.646/snippets"))
+
+;;(setq yas-snippet-dirs '("~/.emacs.d/personal/snippets"))
+
+(yas/global-mode 1)
+(add-to-list 'yas/snippet-dirs "~/.emacs.d/personal/snippets")
+
+;; ------------------------------------------------------------
 
 ;;; C++ SETUP
 ;; c++11
