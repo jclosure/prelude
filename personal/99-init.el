@@ -5,6 +5,8 @@
 (setq personal-themes-dir "~/.emacs.d/personal/themes")
 (add-to-list 'load-path personal-themes-dir)
 
+
+
 ;; THEME
 (disable-theme 'zenburn)
 ;;(load-theme 'sanityinc-tomorrow-night-theme)
@@ -87,6 +89,26 @@
     ;; do Linux stuff
     )))
 
+
+
+;; ------------------------------------------------------------
+
+;;; ELIXER SETUP
+
+
+(add-hook 'elixir-mode-hook 'alchemist-mode)
+(setq alchemist-help-ansi-color-docs t)
+(setq alchemist-project-compile-when-needed t)
+
+(eval-after-load 'flycheck
+  '(flycheck-credo-setup))
+
+;;(eval-after-load 'flycheck
+;;  (progn
+;;    (require 'flycheck-mix)
+;;    '(flycheck-mix-setup)))
+
+(add-hook 'elixir-mode-hook 'flycheck-mode)
 
 
 ;; ------------------------------------------------------------
@@ -294,7 +316,6 @@
   '(add-to-list
     'company-backends '(company-irony-c-headers company-irony)))
 
-(setq company-idle-delay 1)
 ;; (define-key c-mode-map [(tab)] 'company-complete)
 ;; (define-key c++-mode-map [(tab)] 'company-complete)
 
@@ -331,6 +352,7 @@
 ;; (setq company-minimum-prefix-length 2)
 
 (with-eval-after-load 'company
+  (setq company-require-match nil)
   (define-key company-active-map (kbd "C-n") #'company-select-next)
   (define-key company-active-map (kbd "C-p") #'company-select-previous))
 
@@ -405,3 +427,38 @@
 
 ;; If don't want to use the flx's highlights you can turn them off like this:
 ;;(setq flx-ido-use-faces nil)
+
+
+;; company mode tab completion fix
+
+
+(eval-after-load 'company
+  '(progn
+
+     ;;; if active, tab cycle options in active company map
+     ;;(define-key company-active-map [tab] 'company-select-next)
+
+     ;;; if active, tab select selected option in active company map
+     (let ((map company-active-map))
+       (define-key map (kbd "<tab>") 'company-complete-selection)
+       (define-key map (kbd "RET") 'nil))
+
+     (setq company-idle-delay 1)
+     (define-key company-active-map [tab] 'company-select-next)
+
+     (define-key company-mode-map [remap indent-for-tab-command]
+       'company-indent-for-tab-command)
+
+     (setq tab-always-indent 'complete)
+
+     (defvar completion-at-point-functions-saved nil)
+
+     (defun company-indent-for-tab-command (&optional arg)
+       (interactive "P")
+       (let ((completion-at-point-functions-saved completion-at-point-functions)
+             (completion-at-point-functions '(company-complete-common-wrapper)))
+         (indent-for-tab-command arg)))
+
+     (defun company-complete-common-wrapper ()
+       (let ((completion-at-point-functions completion-at-point-functions-saved))
+         (company-complete-common)))))
