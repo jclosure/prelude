@@ -1,13 +1,31 @@
 ;;; package --- My init
 ;; This buffer is for text that is not saved, and for Lisp evaluation.
 ;; To create a file, visit it with C-x C-f and enter text in its buffer.
+
+
+;;; auto-compile elisp file changes
+;; M-x auto-compile-display-log to show activity
+;; M-x toggle-auto-compile to toggle on off
+
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/personal"))
-(setq personal-themes-dir "~/.emacs.d/personal/themes")
-(add-to-list 'load-path personal-themes-dir)
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/personal/my-lib"))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/personal/customizations"))
+(require 'auto-compile)
+(auto-compile-on-load-mode)
+(auto-compile-on-save-mode)
+;; disable elisp compile display buffer to reduce noise from auto-compile
+(setq auto-compile-display-buffer nil)
+(setq auto-compile-mode-line-counter t)
 
+(load-library "support-functions")
 
+;;; LOOK AND FEEL
+
+(set-default-font "Monaco 14")
 
 ;; THEME
+(setq personal-themes-dir "~/.emacs.d/personal/themes")
+(add-to-list 'load-path personal-themes-dir)
 (disable-theme 'zenburn)
 ;;(load-theme 'sanityinc-tomorrow-night-theme)
 (require 'color-theme-sanityinc-tomorrow)
@@ -30,7 +48,6 @@
   (comint-read-input-ring t))
 
 
-
 ;; UNDO PRELUDE STUFF I DON'T LIKE
 ;; remove prelude's reopen as root fn prelude-core:324
 (remove-hook 'find-file-hook 'prelude-reopen-as-root)
@@ -51,7 +68,6 @@
 ;; FIX INDENTING AND TABBING
 (setq tab-always-indent 'complete)
 (add-to-list 'completion-styles 'initials t)
-
 
 ;; SCROLLING
 
@@ -478,3 +494,8 @@
      (defun company-complete-common-wrapper ()
        (let ((completion-at-point-functions completion-at-point-functions-saved))
          (company-complete-common)))))
+
+;;; CUSTOMIZATIONS
+
+;;; ORG-MODE
+(load-library "setup-orgmode")
