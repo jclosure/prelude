@@ -2,6 +2,15 @@
 ;; This buffer is for text that is not saved, and for Lisp evaluation.
 ;; To create a file, visit it with C-x C-f and enter text in its buffer.
 
+;; configure backups
+(setq version-control t ;; Use version numbers for backups.
+      kept-new-versions 10 ;; Number of newest versions to keep.
+      kept-old-versions 0 ;; Number of oldest versions to keep.
+      delete-old-versions t ;; Don't ask to delete excess backup versions.
+      backup-by-copying t) ;; Copy all files, don't rename them.
+
+;; configure whitespace, excluding some modes
+(setq whitespace-global-modes '(not org-mode))
 
 ;;; auto-compile elisp file changes
 ;; M-x auto-compile-display-log to show activity
@@ -27,9 +36,12 @@
 (setq personal-themes-dir "~/.emacs.d/personal/themes")
 (add-to-list 'load-path personal-themes-dir)
 (disable-theme 'zenburn)
-;;(load-theme 'sanityinc-tomorrow-night-theme)
-(require 'color-theme-sanityinc-tomorrow)
-(color-theme-sanityinc-tomorrow--define-theme night)
+(setq custom-safe-themes t)
+
+(load-theme 'atom-one-dark)
+
+;; (require 'color-theme-sanityinc-tomorrow)
+;; (color-theme-sanityinc-tomorrow--define-theme night)
 
 ;;; GENERAL TWEAKAGE
 ;; (setq history-delete-duplicates t)
@@ -60,13 +72,15 @@
 (setq-default frame-title-format "%b (%f)")
 ;; turn off highlight the current line
 (global-hl-line-mode -1)
+;; toggle off any modes that you don't want whitespace-mode to run in - see: prelude-editor.el
+(add-hook 'org-mode-hook (lambda () (whitespace-mode -1)))
 
 ;; turn on semantic mode
 ;; (semantic-mode 1)
 
 
 ;; FIX INDENTING AND TABBING
-(setq tab-always-indent 'complete)
+;;(setq tab-always-indent 'complete)
 (add-to-list 'completion-styles 'initials t)
 
 ;; SCROLLING
@@ -114,7 +128,17 @@
 
 (add-hook 'elixir-mode-hook 'alchemist-mode)
 (setq alchemist-help-ansi-color-docs t)
-(setq alchemist-project-compile-when-needed t)
+;; enable/disable autocompile while lookup functions
+(setq alchemist-project-compile-when-needed nil)
+
+(add-hook 'alchemist-iex-mode-hook
+          '(lambda() (local-set-key (kbd "<tab>") 'company-complete)))
+
+(setq company-idle-delay 0.1)
+(setq company-tooltip-limit 10)
+(setq company-minimum-prefix-length 2)
+(setq company-tooltip-flip-when-above t)
+
 
 (eval-after-load 'flycheck
   '(flycheck-credo-setup))
@@ -124,8 +148,30 @@
 ;;    (require 'flycheck-mix)
 ;;    '(flycheck-mix-setup)))
 
-(add-hook 'elixir-mode-hook 'flycheck-mode)
+;; (add-hook 'elixir-mode-hook 'flycheck-mode)
 
+
+(defun mg/elixir-mode-hook ()
+  (define-key elixir-mode-map [(control return)] #'mg/open-new-line-with-pipe)
+  (alchemist-mode +1)
+  (yas/minor-mode +1)
+  (smartparens-mode +1)
+  (flycheck-mode))
+
+(defun mg/erlang-mode-hook ()
+  (define-key erlang-mode-map (kbd "M-,") 'alchemist-goto-jump-back))
+
+(add-hook 'elixir-mode-hook 'mg/elixir-mode-hook)
+(add-hook 'erlang-mode-hook 'mg/erlang-mode-hook)
+
+;; Open a new line with a pipe on control return
+(defun mg/open-new-line-with-pipe ()
+  "open a new line with a pipe"
+  (interactive)
+  (progn
+    (newline)
+    (insert "|> ")
+    (indent-according-to-mode)))
 
 
 ;; ------------------------------------------------------------
@@ -187,195 +233,196 @@
 ;; (cide)
 
 
+;; THIS IS ALL COMMENTED C++ CONFIG
+
 ;; CMAKE IDE
-(require 'rtags) ;; optional, must have rtags installed
-(cmake-ide-setup)
-;; (global-set-key [f2]   'compile)
+;; (require 'rtags) ;; optional, must have rtags installed
+;; (cmake-ide-setup)
+;; ;; (global-set-key [f2]   'compile)
+
+;; (defun my-c-mode-config ()
 
 
-(defun my-c-mode-config ()
+;;   (local-set-key [f2] 'cmake-ide-compile)
+;;   (local-set-key [f3] 'next-error)
+
+;;   ;; MY C STUFF
+
+;;   ;; ;; To specify what M-x make uses for compilation, you specify the compile-command variable.
+;;   ;; ;;(setq compile-command "make -C ../build")
+;;   ;; (setq compile-command "PREV=$(pwd) && mkdir -p ../build && cd ../build && cmake -DCMAKE_BUILD_TYPE=Debug  .. && make && cd $PREV")
+
+;;   ;; ;; For your GDB stuff, the variable is gud-gdb-command-name, so
+;;   ;; (setq gud-gdb-command-name "gdb --anotate=3 -i=mi -cd ../build")
+
+;;   ;; (global-set-key [f2]   'compile)
+;;   ;; (global-set-key [f3]   'next-error)
+
+;; )
+
+;; ;; add to hook
+;; (add-hook 'c++-mode-hook 'my-c-mode-config)
+;; ;; (add-hook 'c-mode-common-hook 'rtags-start-process-unless-running)
+;; (add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
 
 
-  (local-set-key [f2] 'cmake-ide-compile)
-  (local-set-key [f3] 'next-error)
+;; ;; gtags
 
-  ;; MY C STUFF
-
-  ;; ;; To specify what M-x make uses for compilation, you specify the compile-command variable.
-  ;; ;;(setq compile-command "make -C ../build")
-  ;; (setq compile-command "PREV=$(pwd) && mkdir -p ../build && cd ../build && cmake -DCMAKE_BUILD_TYPE=Debug  .. && make && cd $PREV")
-
-  ;; ;; For your GDB stuff, the variable is gud-gdb-command-name, so
-  ;; (setq gud-gdb-command-name "gdb --anotate=3 -i=mi -cd ../build")
-
-  ;; (global-set-key [f2]   'compile)
-  ;; (global-set-key [f3]   'next-error)
-
-)
-
-;; add to hook
-(add-hook 'c++-mode-hook 'my-c-mode-config)
-;; (add-hook 'c-mode-common-hook 'rtags-start-process-unless-running)
-(add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
+;; (defun gtags-root-dir ()
+;;   "Returns GTAGS root directory or nil if doesn't exist."
+;;   (with-temp-buffer
+;;     (if (zerop (call-process "global" nil t nil "-pr"))
+;;         (buffer-substring (point-min) (1- (point-max)))
+;;       nil)))
+;; ;; (defun gtags-update ()
+;; ;;   "Make GTAGS incremental update"
+;; ;;   (call-process "global" nil nil nil "-u"))
+;; ;; (defun gtags-update-hook ()
+;; ;;   (when (gtags-root-dir)
+;; ;;     (gtags-update)))
+;; ;; (add-hook 'after-save-hook #'gtags-update-hook)
 
 
-;; gtags
+;; ;; (add-hook 'c-mode-common-hook
+;; ;;           (lambda ()
+;; ;;             (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+;; ;;               (ggtags-mode 1))))
 
-(defun gtags-root-dir ()
-  "Returns GTAGS root directory or nil if doesn't exist."
-  (with-temp-buffer
-    (if (zerop (call-process "global" nil t nil "-pr"))
-        (buffer-substring (point-min) (1- (point-max)))
-      nil)))
-;; (defun gtags-update ()
-;;   "Make GTAGS incremental update"
-;;   (call-process "global" nil nil nil "-u"))
-;; (defun gtags-update-hook ()
-;;   (when (gtags-root-dir)
-;;     (gtags-update)))
-;; (add-hook 'after-save-hook #'gtags-update-hook)
-
-
-;; (add-hook 'c-mode-common-hook
-;;           (lambda ()
-;;             (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
-;;               (ggtags-mode 1))))
-
-;; (dolist (map (list ggtags-mode-map dired-mode-map))
-;;   (define-key map (kbd "C-c g s") 'ggtags-find-other-symbol)
-;;   (define-key map (kbd "C-c g h") 'ggtags-view-tag-history)
-;;   (define-key map (kbd "C-c g r") 'ggtags-find-reference)
-;;   (define-key map (kbd "C-c g f") 'ggtags-find-file)
-;;   (define-key map (kbd "C-c g c") 'ggtags-create-tags)
-;;   (define-key map (kbd "C-c g u") 'ggtags-update-tags)
-;;   (define-key map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
-;;   (define-key map (kbd "M-.") 'ggtags-find-tag-dwim)
-;;   (define-key map (kbd "M-,") 'pop-tag-mark)
-;;   (define-key map (kbd "C-c <") 'ggtags-prev-mark)
-;;   (define-key map (kbd "C-c >") 'ggtags-next-mark))
-
-
-
-
-;; FROM SCRATCH
-
-
-;;  (require 'company-rtags)
-
-(setq rtags-autostart-diagnostics t)
-(rtags-diagnostics)
-(setq rtags-completions-enabled t)
-;;  (push 'company-rtags company-backends)
+;; ;; (dolist (map (list ggtags-mode-map dired-mode-map))
+;; ;;   (define-key map (kbd "C-c g s") 'ggtags-find-other-symbol)
+;; ;;   (define-key map (kbd "C-c g h") 'ggtags-view-tag-history)
+;; ;;   (define-key map (kbd "C-c g r") 'ggtags-find-reference)
+;; ;;   (define-key map (kbd "C-c g f") 'ggtags-find-file)
+;; ;;   (define-key map (kbd "C-c g c") 'ggtags-create-tags)
+;; ;;   (define-key map (kbd "C-c g u") 'ggtags-update-tags)
+;; ;;   (define-key map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+;; ;;   (define-key map (kbd "M-.") 'ggtags-find-tag-dwim)
+;; ;;   (define-key map (kbd "M-,") 'pop-tag-mark)
+;; ;;   (define-key map (kbd "C-c <") 'ggtags-prev-mark)
+;; ;;   (define-key map (kbd "C-c >") 'ggtags-next-mark))
 
 
 
-(progn
 
-  (defun use-rtags (&optional useFileManager)
-    (and (rtags-executable-find "rc")
-         (cond ((not (gtags-root-dir)) t)
-               ((and (not (eq major-mode 'c++-mode))
-                     (not (eq major-mode 'c-mode))) (rtags-has-filemanager))
-               (useFileManager (rtags-has-filemanager))
-               (t (rtags-is-indexed)))))
-
-  (defun tags-find-symbol-at-point (&optional prefix)
-    (interactive "P")
-    (if (and (not (rtags-find-symbol-at-point prefix)) rtags-last-request-not-indexed)
-        (gtags-find-tag)))
-  (defun tags-find-references-at-point (&optional prefix)
-    (interactive "P")
-    (if (and (not (rtags-find-references-at-point prefix)) rtags-last-request-not-indexed)
-        (gtags-find-rtag)))
-  (defun tags-find-symbol ()
-    (interactive)
-    (call-interactively (if (use-rtags) 'rtags-find-symbol 'gtags-find-symbol)))
-  (defun tags-find-references ()
-    (interactive)
-    (call-interactively (if (use-rtags) 'rtags-find-references 'gtags-find-rtag)))
-  (defun tags-find-file ()
-    (interactive)
-    (call-interactively (if (use-rtags t) 'rtags-find-file 'gtags-find-file)))
-  (defun tags-imenu ()
-    (interactive)
-    (call-interactively (if (use-rtags t) 'rtags-imenu 'idomenu)))
-
-  ;; NAV REF http://syamajala.github.io/c-ide.html
-
-  (define-key c-mode-base-map (kbd "M-.") (function tags-find-symbol-at-point))
-  (define-key c-mode-base-map (kbd "M-,") (function rtags-location-stack-back))
-  ;; (define-key c-mode-base-map (kbd "M-,") (function tags-find-references-at-point))
-
-  ;; (define-key c-mode-base-map (kbd "M-;") (function tags-find-file))
-  ;; (define-key c-mode-base-map (kbd "C-.") (function tags-find-symbol))
-  ;; (define-key c-mode-base-map (kbd "C-,") (function tags-find-references))
-  ;; (define-key c-mode-base-map (kbd "C-<") (function rtags-find-virtuals-at-point))
-  ;; (define-key c-mode-base-map (kbd "M-i") (function tags-imenu))
-
-  ;; (define-key global-map (kbd "M-.") (function tags-find-symbol-at-point))
-  ;; (define-key global-map (kbd "M-,") (function tags-find-references-at-point))
-  ;; (define-key global-map (kbd "M-;") (function tags-find-file))
-  ;; (define-key global-map (kbd "C-.") (function tags-find-symbol))
-  ;; (define-key global-map (kbd "C-,") (function tags-find-references))
-  ;; (define-key global-map (kbd "C-<") (function rtags-find-virtuals-at-point))
-  ;; (define-key global-map (kbd "M-i") (function tags-imenu))
-
-  (use-rtags))
-
-;;; IRONY
-
-;; needs M-x: irony-install-server
-
-(add-hook 'c++-mode-hook 'irony-mode)
-(add-hook 'c-mode-hook 'irony-mode)
-(add-hook 'objc-mode-hook 'irony-mode)
-
-(defun my-irony-mode-hook ()
-  (define-key irony-mode-map [remap completion-at-point]
-    'irony-completion-at-point-async)
-  (define-key irony-mode-map [remap complete-symbol]
-    'irony-completion-at-point-async))
-
-(add-hook 'irony-mode-hook 'my-irony-mode-hook)
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-
-;;(global-company-mode)
-
-(add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
-(setq company-backends (delete 'company-semantic company-backends))
-(require 'company-irony-c-headers)
-(eval-after-load 'company
-  '(add-to-list
-    'company-backends '(company-irony-c-headers company-irony)))
-
-;; (define-key c-mode-map [(tab)] 'company-complete)
-;; (define-key c++-mode-map [(tab)] 'company-complete)
-
-;; -----------------------------------------------------------
-
-;; CONFIGURE HELM
-(setq  helm-ff-file-name-history-use-recentf t
-       helm-semantic-fuzzy-match t
-       helm-imenu-fuzzy-match t
-       )
-
-;;; helm scratch space here...
-
-;; (define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
-;; (define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
-
-;; ;; Disable helm in some functions
-;; (add-to-list 'helm-completing-read-handlers-alist '(find-file . nil))
-;; (add-to-list ' helm-completing-read-handlers-alist' (find-file . ido))
-;; (add-to-list ' helm-completing-read-handlers-alist' (write-file . nil))
-;; (add-to-list 'helm-completing-read-handlers-alist' (find-alternate-file . nil))
-;; (add-to-list 'helm-completing-read-handlers-alist' (find-tag . nil))
-
-;; disable file find - doesn t work
-;; (add-to-list 'helm-completing-read-handlers-alist '(find-file-read-only . ido))
-;; (add-to-list 'helm-completing-read-handlers-alist '(find-file . ido))
+;; ;; FROM SCRATCH
 
 
+;; ;;  (require 'company-rtags)
+
+;; (setq rtags-autostart-diagnostics t)
+;; (rtags-diagnostics)
+;; (setq rtags-completions-enabled t)
+;; ;;  (push 'company-rtags company-backends)
+
+
+
+;; (progn
+
+;;   (defun use-rtags (&optional useFileManager)
+;;     (and (rtags-executable-find "rc")
+;;          (cond ((not (gtags-root-dir)) t)
+;;                ((and (not (eq major-mode 'c++-mode))
+;;                      (not (eq major-mode 'c-mode))) (rtags-has-filemanager))
+;;                (useFileManager (rtags-has-filemanager))
+;;                (t (rtags-is-indexed)))))
+
+;;   (defun tags-find-symbol-at-point (&optional prefix)
+;;     (interactive "P")
+;;     (if (and (not (rtags-find-symbol-at-point prefix)) rtags-last-request-not-indexed)
+;;         (gtags-find-tag)))
+;;   (defun tags-find-references-at-point (&optional prefix)
+;;     (interactive "P")
+;;     (if (and (not (rtags-find-references-at-point prefix)) rtags-last-request-not-indexed)
+;;         (gtags-find-rtag)))
+;;   (defun tags-find-symbol ()
+;;     (interactive)
+;;     (call-interactively (if (use-rtags) 'rtags-find-symbol 'gtags-find-symbol)))
+;;   (defun tags-find-references ()
+;;     (interactive)
+;;     (call-interactively (if (use-rtags) 'rtags-find-references 'gtags-find-rtag)))
+;;   (defun tags-find-file ()
+;;     (interactive)
+;;     (call-interactively (if (use-rtags t) 'rtags-find-file 'gtags-find-file)))
+;;   (defun tags-imenu ()
+;;     (interactive)
+;;     (call-interactively (if (use-rtags t) 'rtags-imenu 'idomenu)))
+
+;;   ;; NAV REF http://syamajala.github.io/c-ide.html
+
+;;   (define-key c-mode-base-map (kbd "M-.") (function tags-find-symbol-at-point))
+;;   (define-key c-mode-base-map (kbd "M-,") (function rtags-location-stack-back))
+;;   ;; (define-key c-mode-base-map (kbd "M-,") (function tags-find-references-at-point))
+
+;;   ;; (define-key c-mode-base-map (kbd "M-;") (function tags-find-file))
+;;   ;; (define-key c-mode-base-map (kbd "C-.") (function tags-find-symbol))
+;;   ;; (define-key c-mode-base-map (kbd "C-,") (function tags-find-references))
+;;   ;; (define-key c-mode-base-map (kbd "C-<") (function rtags-find-virtuals-at-point))
+;;   ;; (define-key c-mode-base-map (kbd "M-i") (function tags-imenu))
+
+;;   ;; (define-key global-map (kbd "M-.") (function tags-find-symbol-at-point))
+;;   ;; (define-key global-map (kbd "M-,") (function tags-find-references-at-point))
+;;   ;; (define-key global-map (kbd "M-;") (function tags-find-file))
+;;   ;; (define-key global-map (kbd "C-.") (function tags-find-symbol))
+;;   ;; (define-key global-map (kbd "C-,") (function tags-find-references))
+;;   ;; (define-key global-map (kbd "C-<") (function rtags-find-virtuals-at-point))
+;;   ;; (define-key global-map (kbd "M-i") (function tags-imenu))
+
+;;   (use-rtags))
+
+;; ;;; IRONY
+
+;; ;; needs M-x: irony-install-server
+
+;; (add-hook 'c++-mode-hook 'irony-mode)
+;; (add-hook 'c-mode-hook 'irony-mode)
+;; (add-hook 'objc-mode-hook 'irony-mode)
+
+;; (defun my-irony-mode-hook ()
+;;   (define-key irony-mode-map [remap completion-at-point]
+;;     'irony-completion-at-point-async)
+;;   (define-key irony-mode-map [remap complete-symbol]
+;;     'irony-completion-at-point-async))
+
+;; (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+;; (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+;; ;;(global-company-mode)
+
+;; (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
+;; (setq company-backends (delete 'company-semantic company-backends))
+;; (require 'company-irony-c-headers)
+;; (eval-after-load 'company
+;;   '(add-to-list
+;;     'company-backends '(company-irony-c-headers company-irony)))
+
+;; ;; (define-key c-mode-map [(tab)] 'company-complete)
+;; ;; (define-key c++-mode-map [(tab)] 'company-complete)
+
+;; ;; -----------------------------------------------------------
+
+;; ;; CONFIGURE HELM
+;; (setq  helm-ff-file-name-history-use-recentf t
+;;        helm-semantic-fuzzy-match t
+;;        helm-imenu-fuzzy-match t
+;;        )
+
+;; ;;; helm scratch space here...
+
+;; ;; (define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
+;; ;; (define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
+
+;; ;; ;; Disable helm in some functions
+;; ;; (add-to-list 'helm-completing-read-handlers-alist '(find-file . nil))
+;; ;; (add-to-list ' helm-completing-read-handlers-alist' (find-file . ido))
+;; ;; (add-to-list ' helm-completing-read-handlers-alist' (write-file . nil))
+;; ;; (add-to-list 'helm-completing-read-handlers-alist' (find-alternate-file . nil))
+;; ;; (add-to-list 'helm-completing-read-handlers-alist' (find-tag . nil))
+
+;; ;; disable file find - doesn t work
+;; ;; (add-to-list 'helm-completing-read-handlers-alist '(find-file-read-only . ido))
+;; ;; (add-to-list 'helm-completing-read-handlers-alist '(find-file . ido))
+
+;; END C CONFIG STUFF
 
 
 
@@ -427,6 +474,7 @@
 (add-to-list 'load-path "~/projects/")
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
+(neotree-toggle)
 
 ;; TABBAR
 (tabbar-mode t)
@@ -464,36 +512,36 @@
 ;; company mode tab completion fix
 
 
-(eval-after-load 'company
-  '(progn
+;; (eval-after-load 'company
+;;   '(progn
 
-     ;;; if active, tab cycle options in active company map
-     ;;(define-key company-active-map [tab] 'company-select-next)
+;;      ;;; if active, tab cycle options in active company map
+;;      ;;(define-key company-active-map [tab] 'company-select-next)
 
-     ;;; if active, tab select selected option in active company map
+;;      ;;; if active, tab select selected option in active company map
      (let ((map company-active-map))
        (define-key map (kbd "<tab>") 'company-complete-selection)
        (define-key map (kbd "RET") 'nil))
 
-     (setq company-idle-delay 1)
-     (define-key company-active-map [tab] 'company-select-next)
+;;      (setq company-idle-delay 1)
+;;      (define-key company-active-map [tab] 'company-select-next)
 
-     (define-key company-mode-map [remap indent-for-tab-command]
-       'company-indent-for-tab-command)
+;;      (define-key company-mode-map [remap indent-for-tab-command]
+;;        'company-indent-for-tab-command)
 
-     (setq tab-always-indent 'complete)
+;;      (setq tab-always-indent 'complete)
 
-     (defvar completion-at-point-functions-saved nil)
+;;      (defvar completion-at-point-functions-saved nil)
 
-     (defun company-indent-for-tab-command (&optional arg)
-       (interactive "P")
-       (let ((completion-at-point-functions-saved completion-at-point-functions)
-             (completion-at-point-functions '(company-complete-common-wrapper)))
-         (indent-for-tab-command arg)))
+;;      (defun company-indent-for-tab-command (&optional arg)
+;;        (interactive "P")
+;;        (let ((completion-at-point-functions-saved completion-at-point-functions)
+;;              (completion-at-point-functions '(company-complete-common-wrapper)))
+;;          (indent-for-tab-command arg)))
 
-     (defun company-complete-common-wrapper ()
-       (let ((completion-at-point-functions completion-at-point-functions-saved))
-         (company-complete-common)))))
+;;      (defun company-complete-common-wrapper ()
+;;        (let ((completion-at-point-functions completion-at-point-functions-saved))
+;;          (company-complete-common)))))
 
 ;;; CUSTOMIZATIONS
 
